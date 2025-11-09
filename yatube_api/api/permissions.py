@@ -12,3 +12,4 @@ class PostCommentPermission(permissions.BasePermission):
         if self.action == 'create':
             return [IsAuthenticated]
         return [PostCommentPermission()]
+## # # # ## #gsdfgdarf
