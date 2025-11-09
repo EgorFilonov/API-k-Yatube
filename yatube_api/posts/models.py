@@ -19,6 +19,7 @@ class Group(models.Model):
 
 
 class Post(models.Model):
+    """Модели для потсов."""
     text = models.TextField(null=False)
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.ForeignKey(
@@ -33,16 +34,31 @@ class Post(models.Model):
         blank=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
+        return self.text
+
+    class Meta:
+        verbose_name = 'пост'
+        verbose_name_plural = 'посты'
+
+    def __str__(self) -> str:
         return self.text
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following',)
+    """Модель для сооьществ."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='follower')
+    following = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  related_name='following',)
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
 
 
 class Comment(models.Model):
+    """Модель для комментариев"""
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(
@@ -51,3 +67,9 @@ class Comment(models.Model):
     created = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
 
+    def __str__(self) -> str:
+        return self.text
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Коментарии'
