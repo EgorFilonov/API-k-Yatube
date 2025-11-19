@@ -2,11 +2,11 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from api.views import PostViewSet, CommentNestedViewSet, GroupViewSet
 from api.views import FollowViewSet
-
 router_v1 = DefaultRouter()
 router_v1.register('posts', PostViewSet)
 router_v1.register('groups', GroupViewSet)
 router_v1.register('follow', FollowViewSet)
+
 
 urlpatterns = [
     path('v1/', include([
@@ -20,5 +20,8 @@ urlpatterns = [
                  'patch': 'partial_update',
                  'delete': 'destroy'
              })),
+        path('', include('djoser.urls')),
+
+        path('', include('djoser.urls.jwt')),
     ])),
 ]

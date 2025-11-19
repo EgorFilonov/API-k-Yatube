@@ -7,6 +7,8 @@ from .permissions import PostCommentPermission
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import filters
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import CreateModelMixin, ListModelMixin
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -61,12 +63,12 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
 
 
-class FollowViewSet(viewsets.ModelViewSet):
-    """используется для отображения."""
+class FollowViewSet(CreateModelMixin, ListModelMixin, GenericViewSet):
+    """"исопльзуется"""
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = [filters.SearchFilter,]
     search_fields = ('following__username',)
 
     def get_queryset(self):

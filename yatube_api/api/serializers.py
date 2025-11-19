@@ -8,6 +8,7 @@ User = get_user_model()
 
 class PostSerializer(serializers.ModelSerializer):
     """Сериализатор постов"""
+
     author = SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
@@ -17,6 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     """Сериализатор для комментариев."""
+
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username'
     )
@@ -36,7 +38,8 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    '''Серилизатор подписок. '''
+    """Серилизатор подписок."""
+
     user = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
@@ -58,11 +61,11 @@ class FollowSerializer(serializers.ModelSerializer):
             ),
         )
 
-    def create(self, validated_data):
-        user = validated_data.get('user')
-        following = validated_data.get('following')
-
-        if user == following:
+    def validate_following(self, value):
+        request = self.context.get('request')
+        if request and request.user == value:
             raise serializers.ValidationError("нельзя оформить самоподписку")
+        return value
 
+    def create(self, validated_data):
         return Follow.objects.create(**validated_data)
